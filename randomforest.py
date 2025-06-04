@@ -211,9 +211,6 @@ def main():
     st.title("🌳 Random Forest Classifier - Analisi Completa")
     st.markdown("*Una guida interattiva per comprendere e ottimizzare l'algoritmo Random Forest*")
     
-    # Sidebar per i controlli
-    st.sidebar.header("🎛️ Controlli del Modello")
-    
     # === SEZIONE 1: SPIEGAZIONE TEORICA ===
     with st.expander("📚 Spiegazione Dettagliata dell'Algoritmo", expanded=False):
         explain_random_forest_step_by_step()
@@ -320,6 +317,17 @@ def main():
             help="Valutazione su dati non usati (solo con bootstrap=True)"
         ) if bootstrap else False
     
+    # === SEZIONE 3B: CONFIGURAZIONE DATASET ===
+    st.subheader("📊 Configurazione Split Dataset")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        test_size = st.slider("Dimensione test set (%)", 10, 40, 20) / 100
+    
+    with col2:
+        st.metric("Training Set", f"{(1-test_size)*100:.0f}%")
+        st.metric("Test Set", f"{test_size*100:.0f}%")
+    
     # === SEZIONE 4: ADDESTRAMENTO E VALUTAZIONE ===
     st.header("🚀 Addestramento e Valutazione del Modello")
     
@@ -336,7 +344,6 @@ def main():
     class_names = le_auto.classes_
     
     # Split del dataset
-    test_size = st.sidebar.slider("Dimensione test set (%)", 10, 40, 20) / 100
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=test_size, random_state=SEED, stratify=y
     )
